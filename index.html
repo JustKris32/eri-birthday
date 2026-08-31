@@ -132,10 +132,8 @@
   .envelope:hover{ transform: translateY(-6px); }
   .envelope:active{ transform: translateY(-2px) scale(.98); }
 
-  /* whole envelope sits inside its own box, nothing escapes outside it */
   .envelope{ overflow:visible; }
 
-  /* back panel of the envelope (the pouch, full size) */
   .env-body{
     position:absolute; inset:0;
     background: linear-gradient(180deg,#ffe3c4,#ffd2a8);
@@ -144,7 +142,6 @@
     z-index:1;
   }
 
-  /* paper tucked inside, only revealed once the flap opens */
   .env-paper-peek{
     position:absolute; top:8%; left:10%; width:80%; height:0;
     background:#fffaf1; border-radius:6px 6px 0 0;
@@ -162,7 +159,6 @@
   .env-paper-peek::after{ top:28px; width:60%; }
   .envelope.open .env-paper-peek{ top:-30%; height:55%; }
 
-  /* triangular flap, folded down over the top */
   .flap{
     position:absolute; top:0; left:0; width:100%; height:62%;
     clip-path: polygon(0 0, 50% 78%, 100% 0);
@@ -185,7 +181,6 @@
 
   .open-hint{ margin-top:28px; font-size:.95rem; color:#e8dcff; opacity:.8; }
 
-  /* ---------------- LETTER MODAL (popup) ---------------- */
   #letter-modal{
     position:fixed; inset:0; z-index:800;
     display:flex; align-items:center; justify-content:center;
@@ -222,7 +217,6 @@
 
   footer{ padding:30px; text-align:center; font-size:.8rem; opacity:.5; }
 
-  /* confetti */
   .confetti-piece{
     position:fixed; top:-10px; width:8px; height:14px; z-index:900; pointer-events:none;
     animation: confettiFall linear forwards;
@@ -248,7 +242,6 @@
   <div class="bar-wrap"><div class="bar" id="loadBar"></div></div>
 </div>
 
-<!-- HERO SECTION -->
 <section id="hero-section">
   <div class="bg-gradient"></div>
   <div class="particles" id="heroParticles"></div>

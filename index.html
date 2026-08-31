@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday</title>
+<title>Happy Birthday, Eri :'D</title>
 <style>
   :root{
     --pink:#ff8fb3;
@@ -22,10 +22,8 @@
     background: var(--deep);
     color:#fff;
   }
-  /* ---------- CONFIG: change the name here ---------- */
-  .name::before{ content: "Aria"; }
+  .name::before{ content: "Erize"; }
 
-  /* ---------------- LOADING SCREEN ---------------- */
   #loading{
     position:fixed; inset:0; z-index:999;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -58,7 +56,6 @@
   }
   @keyframes twinkle{ 0%,100%{opacity:.2; transform:scale(1);} 50%{opacity:1; transform:scale(1.6);} }
 
-  /* ---------------- GLOBAL ---------------- */
   section{
     min-height:100vh; width:100%; position:relative;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -121,7 +118,6 @@
   .btn:hover{ transform:translateY(-4px) scale(1.05); box-shadow:0 0 40px rgba(255,180,150,.8); }
   .btn:active{ transform:scale(.96); }
 
-  /* ---------------- LETTER SECTION (closed envelope) ---------------- */
   #letter-section{ background:transparent; }
 
   .envelope-wrap{ perspective:1200px; }
@@ -199,9 +195,9 @@
     opacity:1; visibility:visible; pointer-events:auto;
   }
   .letter-paper{
-    position:relative; width:100%; max-width:460px; max-height:80vh;
+    position:relative; width:100%; max-width:640px; max-height:85vh;
     background: #fffaf1; border-radius:8px; color:#3a2a20;
-    padding:34px 30px; font-size:1rem; line-height:1.7; text-align:left;
+    padding:46px 44px; font-size:1.15rem; line-height:1.8; text-align:left;
     box-shadow:0 25px 60px rgba(0,0,0,.5);
     overflow-y:auto;
     transform: scale(.4) translateY(60px); opacity:0;
@@ -240,12 +236,10 @@
 </head>
 <body>
 
-<!-- BACKGROUND MUSIC -->
 <audio id="bgMusic" loop preload="auto">
   <source src="https://raw.githubusercontent.com/JustKris32/eri-birthday/main/About You.mp3" type="audio/mpeg">
 </audio>
 
-<!-- LOADING SCREEN -->
 <div id="loading">
   <div class="load-stars" id="loadStars"></div>
   <div class="load-text">Preparing something special...</div>
@@ -261,7 +255,6 @@
   <button class="btn" id="startBtn">Start the Surprise ✨</button>
 </section>
 
-<!-- LETTER SECTION -->
 <section id="letter-section">
   <div class="bg-gradient"></div>
   <div class="particles" id="letterParticles"></div>
@@ -278,23 +271,24 @@
   <footer>Made with love, just for you.</footer>
 </section>
 
-<!-- LETTER POPUP MODAL -->
 <div id="letter-modal">
   <div class="letter-paper">
-    <button class="letter-close" id="letterClose" aria-label="Close letter">✕</button>
+    <button class="letter-close" id="letterClose" Erize-label="Close letter">✕</button>
     <div id="typed-text"></div>
   </div>
 </div>
 
 <script>
-/* ---------------- CONFIG ---------------- */
-const LETTER_TEXT = `To Aria,
+const LETTER_TEXT = `To Eri,
 
-Today is a reminder of how special you are and how many wonderful memories you've created along the way. I hope this year brings you happiness, new adventures, and countless reasons to smile.
+Happy birthdayyy Erizee!! Honestly, hindi ko alam kung paano ko sisimulan ‘to, and I'm sure you weren't expecting this too (Or maybe you do... TT) But yeah, honestly I never really intended to make a webpage for you pero dahil ayoko lang maging simple, I'd prefer wanting to give you something instead. And I know, I should have not broke our no contact, but I wanted to break it since I can't get it out of my head to send you something, just know that I value you as a special person, since it is your birthday.
 
-Happy Birthday!`;
+I just hope this new chapter brings you more reasons to smile, and more opportunities na mag-grow ka and do the things you really want. Alam kong hindi naman laging magiging perfect ang lahat, pero sana kahit may bad days, you’ll always remember na may mga taong naniniwala sa’yo and rooting for you. Please don’t be too hard on yourself, okay? :'D You’re doing better than you think, and you deserve to appreciate yourself more.
 
-/* ---------------- LOADING SCREEN ---------------- */
+Anyways, ayun lang naman HAHAHA, I just hope you enjoy your day to the fullest, eat good food, laugh a lot, and make some really nice memories today. Thank you for being you, and for all the moments na naging part ka ng life ko, I'm still grateful that you were a part of my life, no matter what our status is right now. Without you, I honestly don't know where I would be right now, since you were my first love. Happy birthday ulitttt Eriii! I’m wishing you nothing but happiness, good health, more birthdays to come, and hopefully a year full of things that make you genuinely happy. Merry Christmas na rin since BER months na hehehe.
+
+Love, Kris`;
+
 const loadBar = document.getElementById('loadBar');
 const loading = document.getElementById('loading');
 const loadStars = document.getElementById('loadStars');
@@ -314,6 +308,7 @@ function hideLoading(){
   if(loadingHidden) return;
   loadingHidden = true;
   loading.classList.add('hide');
+  tryPlayMusic();
 }
 const loadInterval = setInterval(()=>{
   progress += Math.random()*18;
@@ -326,7 +321,6 @@ const loadInterval = setInterval(()=>{
 },250);
 setTimeout(hideLoading, 4000);
 
-/* ---------------- BACKGROUND MUSIC (autoplay-safe) ---------------- */
 const bgMusic = document.getElementById('bgMusic');
 function tryPlayMusic(){
   const p = bgMusic.play();
@@ -346,9 +340,6 @@ function tryPlayMusic(){
     });
   }
 }
-tryPlayMusic();
-
-/* ---------------- FLOATING PARTICLES ---------------- */
 function spawnParticles(containerId, symbols, count){
   const container = document.getElementById(containerId);
   if(!container) return;
@@ -367,7 +358,6 @@ function spawnParticles(containerId, symbols, count){
 spawnParticles('heroParticles', ['✨','💖','⭐','🎈','💫'], 26);
 spawnParticles('letterParticles', ['💌','✨','💫'], 14);
 
-/* ---------------- CONFETTI ---------------- */
 function launchConfetti(count=120){
   const colors = ['#ff8fb3','#ffd97a','#a78bfa','#7de3ff','#ffffff'];
   for(let i=0;i<count;i++){
@@ -382,7 +372,6 @@ function launchConfetti(count=120){
   }
 }
 
-/* ---------------- HERO START BUTTON -> jumps to letter section ---------------- */
 document.getElementById('startBtn').addEventListener('click', ()=>{
   launchConfetti(150);
   setTimeout(()=>{
@@ -390,7 +379,6 @@ document.getElementById('startBtn').addEventListener('click', ()=>{
   }, 400);
 });
 
-/* ---------------- LETTER / ENVELOPE ---------------- */
 const envelope = document.getElementById('envelope');
 const openHint = document.getElementById('openHint');
 const letterModal = document.getElementById('letter-modal');

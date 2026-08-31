@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday</title>
+<style>
+  :root{
+    --pink:#ff8fb3;
+    --purple:#a78bfa;
+    --gold:#ffd97a;
+    --deep:#1a1030;
+    --deep2:#2b1b4d;
+    --beige:#f2e3d0;
+    --beige2:#e8d3b8;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    height:100%;
+    overflow-x:hidden;
+    font-family: 'Georgia', 'Segoe UI', serif;
+    background: var(--deep);
+    color:#fff;
+  }
+  /* ---------- CONFIG: change the name here ---------- */
+  .name::before{ content: "Aria"; }
+
+  /* ---------------- LOADING SCREEN ---------------- */
+  #loading{
+    position:fixed; inset:0; z-index:999;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background: radial-gradient(circle at 50% 40%, var(--beige), var(--beige2) 70%);
+    transition: opacity 1s ease, visibility 1s ease;
+  }
+  #loading.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+  .load-text{
+    font-size:1.3rem; letter-spacing:2px; margin-bottom:24px;
+    background: linear-gradient(90deg,var(--pink),#c98a4b,var(--purple));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation: shimmer 3s linear infinite;
+    background-size:200% auto;
+  }
+  @keyframes shimmer{ to{ background-position: 200% center; } }
+  .bar-wrap{
+    width:240px; height:6px; border-radius:6px; background:rgba(0,0,0,.1);
+    overflow:hidden;
+  }
+  .bar{
+    height:100%; width:0%; border-radius:6px;
+    background: linear-gradient(90deg,var(--pink),var(--gold));
+    box-shadow:0 0 12px var(--pink);
+    transition: width .2s ease;
+  }
+  .load-stars{ position:absolute; inset:0; overflow:hidden; pointer-events:none;}
+  .load-star{
+    position:absolute; width:3px; height:3px; background:#8a6d4a; border-radius:50%;
+    opacity:.5; animation: twinkle 2.5s ease-in-out infinite;
+  }
+  @keyframes twinkle{ 0%,100%{opacity:.2; transform:scale(1);} 50%{opacity:1; transform:scale(1.6);} }
+
+  /* ---------------- GLOBAL ---------------- */
+  section{
+    min-height:100vh; width:100%; position:relative;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:40px 20px; overflow:hidden;
+  }
+  .bg-gradient{
+    position:absolute; inset:0; z-index:-2;
+    background: linear-gradient(-45deg, #1a1030, #2b1b4d, #3b1e52, #24123f);
+    background-size:400% 400%;
+    animation: gradientShift 18s ease infinite;
+  }
+  @keyframes gradientShift{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+  .particles{ position:absolute; inset:0; z-index:-1; pointer-events:none; overflow:hidden; }
+  .particle{
+    position:absolute; bottom:-10%;
+    animation: floatUp linear infinite;
+    opacity:.8;
+  }
+  @keyframes floatUp{
+    0%{ transform:translateY(0) rotate(0deg); opacity:0;}
+    10%{opacity:1;}
+    90%{opacity:1;}
+    100%{ transform:translateY(-110vh) rotate(360deg); opacity:0;}
+  }
+
+  h1{
+    font-size:clamp(2.2rem, 7vw, 4.5rem);
+    background: linear-gradient(90deg, var(--pink), var(--gold), var(--purple));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    background-size:200% auto;
+    animation: shimmer 5s linear infinite, popIn 1.2s ease;
+    text-shadow: 0 0 40px rgba(255,143,179,.3);
+  }
+  @keyframes popIn{
+    0%{ transform:scale(.7); opacity:0;}
+    60%{ transform:scale(1.05); opacity:1;}
+    100%{ transform:scale(1);}
+  }
+  .subtitle{
+    margin-top:18px; font-size:clamp(1rem,2.5vw,1.4rem); color:#e8dcff; opacity:0;
+    animation: fadeUp 1.5s ease .6s forwards;
+    max-width:600px;
+  }
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .btn{
+    margin-top:44px; padding:16px 38px; border:none; border-radius:50px;
+    font-size:1.1rem; cursor:pointer; color:#241436; font-weight:bold;
+    background: linear-gradient(90deg, var(--gold), var(--pink));
+    box-shadow: 0 0 25px rgba(255,180,150,.5);
+    transition: transform .25s ease, box-shadow .25s ease;
+    opacity:0; animation: fadeUp 1.5s ease 1.1s forwards;
+  }
+  .btn:hover{ transform:translateY(-4px) scale(1.05); box-shadow:0 0 40px rgba(255,180,150,.8); }
+  .btn:active{ transform:scale(.96); }
+
+  /* ---------------- LETTER SECTION (closed envelope) ---------------- */
+  #letter-section{ background:transparent; }
+
+  .envelope-wrap{ perspective:1200px; }
+
+  .envelope{
+    width:280px; height:190px; position:relative; cursor:pointer;
+    transition: transform .3s ease;
+  }
+  .envelope:hover{ transform: translateY(-6px); }
+  .envelope:active{ transform: translateY(-2px) scale(.98); }
+
+  /* whole envelope sits inside its own box, nothing escapes outside it */
+  .envelope{ overflow:visible; }
+
+  /* back panel of the envelope (the pouch, full size) */
+  .env-body{
+    position:absolute; inset:0;
+    background: linear-gradient(180deg,#ffe3c4,#ffd2a8);
+    border-radius:10px;
+    box-shadow:0 20px 50px rgba(0,0,0,.45);
+    z-index:1;
+  }
+
+  /* paper tucked inside, only revealed once the flap opens */
+  .env-paper-peek{
+    position:absolute; top:8%; left:10%; width:80%; height:0;
+    background:#fffaf1; border-radius:6px 6px 0 0;
+    box-shadow:0 -4px 14px rgba(0,0,0,.15);
+    overflow:hidden;
+    z-index:2;
+    transition: height .5s ease .15s, top .5s ease .15s;
+  }
+  .env-paper-peek::before,
+  .env-paper-peek::after{
+    content:""; position:absolute; left:14px; right:14px; height:6px;
+    background:#d8c7ad; border-radius:3px; opacity:.7;
+  }
+  .env-paper-peek::before{ top:14px; }
+  .env-paper-peek::after{ top:28px; width:60%; }
+  .envelope.open .env-paper-peek{ top:-30%; height:55%; }
+
+  /* triangular flap, folded down over the top */
+  .flap{
+    position:absolute; top:0; left:0; width:100%; height:62%;
+    clip-path: polygon(0 0, 50% 78%, 100% 0);
+    background: linear-gradient(160deg,#ffcd9a,#ffab8f);
+    transform-origin: top center;
+    transition: transform .9s cubic-bezier(.6,0,.3,1);
+    z-index:3;
+  }
+  .envelope.open .flap{ transform: rotateX(180deg); }
+
+  .seal{
+    position:absolute; top:46%; left:50%; transform:translate(-50%,-50%);
+    width:44px; height:44px; border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, var(--pink), #b33a5c);
+    display:flex; align-items:center; justify-content:center; font-size:1.2rem;
+    box-shadow:0 4px 10px rgba(0,0,0,.4); z-index:4;
+    transition: opacity .3s ease, transform .3s ease;
+  }
+  .envelope.open .seal{ opacity:0; transform:translate(-50%,-50%) scale(.5); }
+
+  .open-hint{ margin-top:28px; font-size:.95rem; color:#e8dcff; opacity:.8; }
+
+  /* ---------------- LETTER MODAL (popup) ---------------- */
+  #letter-modal{
+    position:fixed; inset:0; z-index:800;
+    display:flex; align-items:center; justify-content:center;
+    background: rgba(10,5,20,0); padding:24px;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition: background .4s ease, opacity .4s ease, visibility .4s ease;
+  }
+  #letter-modal.show{
+    background: rgba(10,5,20,.72);
+    opacity:1; visibility:visible; pointer-events:auto;
+  }
+  .letter-paper{
+    position:relative; width:100%; max-width:460px; max-height:80vh;
+    background: #fffaf1; border-radius:8px; color:#3a2a20;
+    padding:34px 30px; font-size:1rem; line-height:1.7; text-align:left;
+    box-shadow:0 25px 60px rgba(0,0,0,.5);
+    overflow-y:auto;
+    transform: scale(.4) translateY(60px); opacity:0;
+    transition: transform .55s cubic-bezier(.2,.8,.3,1.2), opacity .45s ease;
+  }
+  #letter-modal.show .letter-paper{ transform: scale(1) translateY(0); opacity:1; }
+  .letter-close{
+    position:absolute; top:10px; right:12px;
+    width:34px; height:34px; border-radius:50%; border:none;
+    background: rgba(58,42,32,.08); color:#3a2a20; font-size:1.1rem;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition: background .2s ease, transform .2s ease;
+  }
+  .letter-close:hover{ background: rgba(58,42,32,.18); transform: scale(1.08); }
+
+  #typed-text{ white-space:pre-wrap; }
+  .cursor{ display:inline-block; width:2px; background:#3a2a20; margin-left:2px; animation:blink 1s step-end infinite; }
+  @keyframes blink{ 50%{opacity:0;} }
+
+  footer{ padding:30px; text-align:center; font-size:.8rem; opacity:.5; }
+
+  /* confetti */
+  .confetti-piece{
+    position:fixed; top:-10px; width:8px; height:14px; z-index:900; pointer-events:none;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall{
+    to{ transform: translateY(110vh) rotate(720deg); opacity:.3; }
+  }
+
+  @media (max-width:480px){
+    .envelope{ width:230px; height:160px; }
+    .env-paper-peek{ top:-30px; height:64px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BACKGROUND MUSIC -->
+<audio id="bgMusic" loop preload="auto">
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- LOADING SCREEN -->
+<div id="loading">
+  <div class="load-stars" id="loadStars"></div>
+  <div class="load-text">Preparing something special...</div>
+  <div class="bar-wrap"><div class="bar" id="loadBar"></div></div>
+</div>
+
+<!-- HERO SECTION -->
+<section id="hero-section">
+  <div class="bg-gradient"></div>
+  <div class="particles" id="heroParticles"></div>
+  <h1>Happy Birthday, <span class="name"></span>! 🎂</h1>
+  <p class="subtitle">Today isn't just another day... it's a celebration of you.</p>
+  <button class="btn" id="startBtn">Start the Surprise ✨</button>
+</section>
+
+<!-- LETTER SECTION -->
+<section id="letter-section">
+  <div class="bg-gradient"></div>
+  <div class="particles" id="letterParticles"></div>
+  <h2 style="font-size:clamp(1.6rem,4vw,2.4rem); margin-bottom:10px; color:var(--gold);">A Little Letter For You</h2>
+  <div class="envelope-wrap">
+    <div class="envelope" id="envelope">
+      <div class="env-body"></div>
+      <div class="env-paper-peek"></div>
+      <div class="flap"></div>
+      <div class="seal">💌</div>
+    </div>
+  </div>
+  <div class="open-hint" id="openHint">Tap the envelope to open your letter</div>
+  <footer>Made with love, just for you.</footer>
+</section>
+
+<!-- LETTER POPUP MODAL -->
+<div id="letter-modal">
+  <div class="letter-paper">
+    <button class="letter-close" id="letterClose" aria-label="Close letter">✕</button>
+    <div id="typed-text"></div>
+  </div>
+</div>
+
+<script>
+/* ---------------- CONFIG ---------------- */
+const LETTER_TEXT = `To Aria,
+
+Today is a reminder of how special you are and how many wonderful memories you've created along the way. I hope this year brings you happiness, new adventures, and countless reasons to smile.
+
+Happy Birthday!`;
+
+/* ---------------- LOADING SCREEN ---------------- */
+const loadBar = document.getElementById('loadBar');
+const loading = document.getElementById('loading');
+const loadStars = document.getElementById('loadStars');
+
+for(let i=0;i<40;i++){
+  const s = document.createElement('div');
+  s.className='load-star';
+  s.style.left = Math.random()*100+'%';
+  s.style.top = Math.random()*100+'%';
+  s.style.animationDelay = (Math.random()*2.5)+'s';
+  loadStars.appendChild(s);
+}
+
+let progress = 0;
+let loadingHidden = false;
+function hideLoading(){
+  if(loadingHidden) return;
+  loadingHidden = true;
+  loading.classList.add('hide');
+}
+const loadInterval = setInterval(()=>{
+  progress += Math.random()*18;
+  if(progress>=100){
+    progress=100;
+    clearInterval(loadInterval);
+    setTimeout(hideLoading, 400);
+  }
+  loadBar.style.width = progress+'%';
+},250);
+setTimeout(hideLoading, 4000);
+
+/* ---------------- BACKGROUND MUSIC (autoplay-safe) ---------------- */
+const bgMusic = document.getElementById('bgMusic');
+function tryPlayMusic(){
+  const p = bgMusic.play();
+  if(p !== undefined){
+    p.catch(()=>{
+      const resume = ()=>{
+        bgMusic.play().catch(()=>{});
+        window.removeEventListener('click', resume);
+        window.removeEventListener('touchstart', resume);
+        window.removeEventListener('keydown', resume);
+        window.removeEventListener('scroll', resume);
+      };
+      window.addEventListener('click', resume, {once:true});
+      window.addEventListener('touchstart', resume, {once:true});
+      window.addEventListener('keydown', resume, {once:true});
+      window.addEventListener('scroll', resume, {once:true});
+    });
+  }
+}
+tryPlayMusic();
+
+/* ---------------- FLOATING PARTICLES ---------------- */
+function spawnParticles(containerId, symbols, count){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  for(let i=0;i<count;i++){
+    const p = document.createElement('div');
+    p.className='particle';
+    p.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+    p.style.left = Math.random()*100+'%';
+    p.style.fontSize = (0.8+Math.random()*1.6)+'rem';
+    const duration = 8+Math.random()*10;
+    p.style.animationDuration = duration+'s';
+    p.style.animationDelay = (Math.random()*duration)+'s';
+    container.appendChild(p);
+  }
+}
+spawnParticles('heroParticles', ['✨','💖','⭐','🎈','💫'], 26);
+spawnParticles('letterParticles', ['💌','✨','💫'], 14);
+
+/* ---------------- CONFETTI ---------------- */
+function launchConfetti(count=120){
+  const colors = ['#ff8fb3','#ffd97a','#a78bfa','#7de3ff','#ffffff'];
+  for(let i=0;i<count;i++){
+    const c = document.createElement('div');
+    c.className='confetti-piece';
+    c.style.left = Math.random()*100+'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (2.5+Math.random()*2)+'s';
+    c.style.transform = `rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 5000);
+  }
+}
+
+/* ---------------- HERO START BUTTON -> jumps to letter section ---------------- */
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  launchConfetti(150);
+  setTimeout(()=>{
+    document.getElementById('letter-section').scrollIntoView({behavior:'smooth'});
+  }, 400);
+});
+
+/* ---------------- LETTER / ENVELOPE ---------------- */
+const envelope = document.getElementById('envelope');
+const openHint = document.getElementById('openHint');
+const letterModal = document.getElementById('letter-modal');
+const letterClose = document.getElementById('letterClose');
+const typedTarget = document.getElementById('typed-text');
+let typingTimer = null;
+
+envelope.addEventListener('click', openLetter);
+
+function openLetter(){
+  envelope.classList.add('open');
+  openHint.style.opacity = '0';
+  setTimeout(()=>{
+    letterModal.classList.add('show');
+    typedTarget.textContent = '';
+    typeLetter();
+  }, 500);
+}
+
+function closeLetter(){
+  letterModal.classList.remove('show');
+  envelope.classList.remove('open');
+  openHint.style.opacity = '0.8';
+  if(typingTimer) clearTimeout(typingTimer);
+}
+
+letterClose.addEventListener('click', closeLetter);
+letterModal.addEventListener('click', (e)=>{
+  if(e.target === letterModal) closeLetter();
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape' && letterModal.classList.contains('show')) closeLetter();
+});
+
+function typeLetter(){
+  let i = 0;
+  const cursor = document.createElement('span');
+  cursor.className='cursor';
+  cursor.textContent='\u00A0';
+  function step(){
+    if(!letterModal.classList.contains('show')) return;
+    if(i < LETTER_TEXT.length){
+      typedTarget.textContent = LETTER_TEXT.slice(0, i+1);
+      typedTarget.appendChild(cursor);
+      i++;
+      typingTimer = setTimeout(step, 28);
+    } else {
+      cursor.remove();
+    }
+  }
+  step();
+}
+</script>
+</body>
+</html>

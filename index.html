@@ -322,16 +322,15 @@ function tryPlayMusic(){
   if(p !== undefined){
     p.catch(()=>{
       const resume = ()=>{
-        bgMusic.play().catch(()=>{});
-        window.removeEventListener('click', resume);
-        window.removeEventListener('touchstart', resume);
-        window.removeEventListener('keydown', resume);
-        window.removeEventListener('scroll', resume);
+        bgMusic.play().then(()=>{
+          window.removeEventListener('click', resume);
+          window.removeEventListener('touchstart', resume);
+          window.removeEventListener('keydown', resume);
+        }).catch(()=>{});
       };
-      window.addEventListener('click', resume, {once:true});
-      window.addEventListener('touchstart', resume, {once:true});
-      window.addEventListener('keydown', resume, {once:true});
-      window.addEventListener('scroll', resume, {once:true});
+      window.addEventListener('click', resume);
+      window.addEventListener('touchstart', resume);
+      window.addEventListener('keydown', resume);
     });
   }
 }
